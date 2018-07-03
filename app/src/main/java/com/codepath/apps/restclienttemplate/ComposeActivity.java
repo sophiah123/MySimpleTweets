@@ -26,4 +26,10 @@ public class ComposeActivity extends AppCompatActivity {
         });
     }
 
+    // ActivityTwo.java
+    public void onSubmit(View v) {
+        // closes the activity and returns to first screen
+        this.finish();
+    }
+
 }
