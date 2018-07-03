@@ -10,7 +10,7 @@ import android.view.View;
 public class ComposeActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    /*protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -25,11 +25,19 @@ public class ComposeActivity extends AppCompatActivity {
             }
         });
     }
-
+*/
     // ActivityTwo.java
     public void onSubmit(View v) {
         // closes the activity and returns to first screen
         this.finish();
+    }
+
+    // ActivityTwo.java (subactivity) can access any extras passed in
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        String username = getIntent().getStringExtra("username");
+        String inReplyTo = getIntent().getStringExtra("in_reply_to");
+        int code = getIntent().getIntExtra("code", 0);
     }
 
 }

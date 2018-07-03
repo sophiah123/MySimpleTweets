@@ -70,13 +70,24 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     // ActivityOne.java
-    public void launchComposeView() {
+    /*public void launchComposeView() {
         // first parameter is the context, second is the class of the activity to launch
         Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
         startActivity(i); // brings up the second activity
     }
+    */
 
-
+    // ActivityOne.java
+    public void launchComposeView() {
+        // first parameter is the context, second is the class of the activity to launch
+        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+        // put "extras" into the bundle for access in the second activity
+        i.putExtra("username", "foobar");
+        i.putExtra("in_reply_to", "george");
+        i.putExtra("code", 400);
+        // brings up the second activity
+        startActivity(i);
+    }
 
 
 
