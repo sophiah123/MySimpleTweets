@@ -9,18 +9,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+
+
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -28,6 +29,9 @@ public class TimelineActivity extends AppCompatActivity {
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
+
+    private final String TAG = "debugdebug";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +50,8 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         //set the adapter
         rvTweets.setAdapter(tweetAdapter);
-        populateTimeline();
+        fetchTimelineAsync(0);
     }
-
-
 
 
     @Override
@@ -64,7 +66,7 @@ public class TimelineActivity extends AppCompatActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.miCompose:
-                launchComposeView();
+                composeMessage(); //same as launchComposeView
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -80,7 +82,7 @@ public class TimelineActivity extends AppCompatActivity {
     */
 
     // ActivityOne.java
-    public void launchComposeView() {
+    public void composeMessage() {
         // first parameter is the context, second is the class of the activity to launch
         Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
         startActivityForResult(i, REQUEST_CODE);
@@ -106,7 +108,7 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     // ActivityOne.java, time to handle the result of the sub-activity
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
@@ -117,13 +119,70 @@ public class TimelineActivity extends AppCompatActivity {
             Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
         }
     }
+*/
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK) {
+            Tweet tweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("tweet"));
+            //Log.d("SendTweet", "Activity result: " + tweet.body);
+            // Extract name value from result extras
+            tweets.add(0, tweet);
+            tweetAdapter.notifyItemInserted(0);
+            rvTweets.scrollToPosition(0);
+        }
+    }
 
 
 
 
+    public void fetchTimelineAsync(int page) {
+        // Send the network request to fetch the updated data
+        // `client` here is an instance of Android Async HTTP
+        // getHomeTimeline is an example endpoint.
+        client.getHomeTimeline(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);// Remember to CLEAR OUT old items before appending in the new ones
+                tweetAdapter.clear();
+                tweets.clear();
+                // ...the data has come back, add new items to your adapter...
+                for (int i = 0; i < response.length(); i++) {
+                    // convert each object to a Tweet model
+                    // add that Tweet model to our data source
+                    // notify the adapter that we've added an item
+                    try {
+                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
+                        tweets.add(tweet);
+                        tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.d(TAG, "Adding all tweets");
+                tweetAdapter.addAll(tweets);
+                // Now we call setRefreshing(false) to signal refresh has finished
+                Log.d(TAG, "Finished adding all tweets");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d(TAG, "Fetch timeline error: " + throwable.toString());
+                Log.d(TAG, responseString);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Log.d(TAG, "Fetch timeline error: " + throwable.toString());
+                Log.d(TAG, errorResponse.toString());
+            }
+        });
+    }
 
 
-    private void populateTimeline() {
+
+
+    /*private void populateTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -168,5 +227,8 @@ public class TimelineActivity extends AppCompatActivity {
                 throwable.printStackTrace();
             }
         });
-    }
+
+    } */
+
+
 }
