@@ -1,15 +1,14 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
+
 
 public class ComposeActivity extends AppCompatActivity {
 
-    @Override
     /*protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose2);
@@ -26,18 +25,28 @@ public class ComposeActivity extends AppCompatActivity {
         });
     }
 */
-    // ActivityTwo.java
-    public void onSubmit(View v) {
-        // closes the activity and returns to first screen
-        this.finish();
-    }
 
     // ActivityTwo.java (subactivity) can access any extras passed in
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_compose2);
         String username = getIntent().getStringExtra("username");
         String inReplyTo = getIntent().getStringExtra("in_reply_to");
         int code = getIntent().getIntExtra("code", 0);
     }
+
+    // ActivityNamePrompt.java -- launched for a result
+    public void onSubmit(View v) {
+        EditText etCompose = (EditText) findViewById(R.id.etCompose);
+        // Prepare data intent
+        Intent data = new Intent();
+        // Pass relevant data back as a result
+        data.putExtra("name", etCompose.getText().toString());
+        data.putExtra("code", 200); // ints work too
+        // Activity finished ok, return the data
+        setResult(RESULT_OK, data); // set result code and bundle data for response
+        finish(); // closes the activity, pass data to parent
+    }
+
 
 }

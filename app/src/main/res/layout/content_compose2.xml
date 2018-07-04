@@ -9,9 +9,10 @@
     tools:showIn="@layout/activity_compose2">
 
     <EditText
-        android:id="@+id/et_simple"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:id="@+id/etCompose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     </EditText>
 
 </android.support.constraint.ConstraintLayout>
