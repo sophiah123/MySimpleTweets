@@ -47,9 +47,13 @@ public class ComposeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose2);
-        String username = getIntent().getStringExtra("username");
+        /*String username = getIntent().getStringExtra("username");
         String inReplyTo = getIntent().getStringExtra("in_reply_to");
         int code = getIntent().getIntExtra("code", 0);
+*/
+
+        client = TwitterApp.getRestClient(this);
+        etCompose = (EditText) findViewById(R.id.etCompose);
     }
 
     // ActivityNamePrompt.java -- launched for a result
