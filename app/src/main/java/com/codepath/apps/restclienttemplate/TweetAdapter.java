@@ -23,7 +23,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
     public TweetAdapter(List<Tweet> tweets) {
         mTweets = tweets;
     }
-    //for each row, inflate tjhe layout and cache references into ViewHolder
+    //for each row, inflate the layout and cache references into ViewHolder
 
     @NonNull
     @Override
@@ -46,6 +46,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
         holder.tvUsername.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
         holder.tvRelativeTimestamp.setText(tweet.createdAt);
+        holder.tvScreenName.setText(tweet.user.screenName);
 
 
         Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
@@ -76,7 +77,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
         public TextView tvUsername;
         public TextView tvBody;
         public TextView tvRelativeTimestamp;
-
+        public TextView tvScreenName;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -87,6 +88,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
             tvUsername  = (TextView) itemView.findViewById(R.id.tvUserName);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvRelativeTimestamp = (TextView) itemView.findViewById(R.id.tvRelativeTimestamp);
+            tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
+
+
         }
     }
 
