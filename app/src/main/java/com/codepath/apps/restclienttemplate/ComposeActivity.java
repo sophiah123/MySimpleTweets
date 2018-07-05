@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -15,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
+
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -26,6 +30,7 @@ public class ComposeActivity extends AppCompatActivity {
     EditText etCompose;
     TwitterClient client;
     Tweet tweet;
+    TextView tvCharCount;
 
     /*protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,8 @@ public class ComposeActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient(this);
         etCompose = findViewById(R.id.etCompose);
+        tvCharCount = (TextView) findViewById(R.id.tvCharCount);
+
     }
 
     @Override
@@ -91,6 +98,14 @@ public class ComposeActivity extends AppCompatActivity {
         finish(); // closes the activity, pass data to parent
     }
 */
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        String charsLeft = String.format(Locale.US, "%d", 280 - etCompose.getText().toString().length());
+        tvCharCount.setText(charsLeft);
+        return true;
+    }
+
     public void composeTweet(View view) {
 
         client.sendTweet(etCompose.getText().toString(), new JsonHttpResponseHandler() {
