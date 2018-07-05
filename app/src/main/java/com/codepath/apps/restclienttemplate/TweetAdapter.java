@@ -19,6 +19,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
     private List<Tweet> mTweets;
     Context context;
     //pass in the Tweets array in the constructor
+
     public TweetAdapter(List<Tweet> tweets) {
         mTweets = tweets;
     }

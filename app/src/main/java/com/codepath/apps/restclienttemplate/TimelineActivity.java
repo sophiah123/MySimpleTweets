@@ -8,13 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -51,90 +51,9 @@ public class TimelineActivity extends AppCompatActivity {
         //set the adapter
         rvTweets.setAdapter(tweetAdapter);
         fetchTimelineAsync(0);
+        populateTimeline();
+
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.miCompose:
-                composeMessage(); //same as launchComposeView
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    // ActivityOne.java
-    /*public void launchComposeView() {
-        // first parameter is the context, second is the class of the activity to launch
-        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
-        startActivity(i); // brings up the second activity
-    }
-    */
-
-    // ActivityOne.java
-    public void composeMessage() {
-        // first parameter is the context, second is the class of the activity to launch
-        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
-        startActivityForResult(i, REQUEST_CODE);
-
-        // put "extras" into the bundle for access in the second activity
-        /*i.putExtra("username", "foobar");
-        i.putExtra("in_reply_to", "george");
-        i.putExtra("code", 400);
-
-        // brings up the second activity
-        startActivity(i);
-        */
-    }
-
-    // ActivityOne.java
-// REQUEST_CODE can be any value we like, used to determine the result type later
-    private final int REQUEST_CODE = 20;
-    // FirstActivity, launching an activity for a result
-    public void onClick(View view) {
-        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
-        i.putExtra("mode", 2); // pass arbitrary data to launched activity
-        startActivityForResult(i, REQUEST_CODE);
-    }
-
-    // ActivityOne.java, time to handle the result of the sub-activity
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // REQUEST_CODE is defined above
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            // Extract name value from result extras
-            String name = data.getExtras().getString("name");
-            int code = data.getExtras().getInt("code", 0);
-            // Toast the name to display temporarily on screen
-            Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
-        }
-    }
-*/
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // REQUEST_CODE is defined above
-        if (resultCode == RESULT_OK) {
-            Tweet tweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("tweet"));
-            //Log.d("SendTweet", "Activity result: " + tweet.body);
-            // Extract name value from result extras
-            tweets.add(0, tweet);
-            tweetAdapter.notifyItemInserted(0);
-            rvTweets.scrollToPosition(0);
-        }
-    }
-
-
-
 
     public void fetchTimelineAsync(int page) {
         // Send the network request to fetch the updated data
@@ -144,8 +63,8 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);// Remember to CLEAR OUT old items before appending in the new ones
-                tweetAdapter.clear();
-                tweets.clear();
+                //tweetAdapter.clear();
+                //tweets.clear();
                 // ...the data has come back, add new items to your adapter...
                 for (int i = 0; i < response.length(); i++) {
                     // convert each object to a Tweet model
@@ -181,13 +100,89 @@ public class TimelineActivity extends AppCompatActivity {
 
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
-    /*private void populateTimeline() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.miCompose:
+                composeMessage(); //same as launchComposeView
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    // ActivityOne.java
+// REQUEST_CODE can be any value we like, used to determine the result type later
+    private final int REQUEST_CODE = 20;
+    // FirstActivity, launching an activity for a result
+   /* public void onClick(View view) {
+        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+        i.putExtra("mode", 2); // pass arbitrary data to launched activity
+        startActivityForResult(i, REQUEST_CODE);
+    }
+*/
+
+
+    // ActivityOne.java, time to handle the result of the sub-activity
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract name value from result extras
+            String name = data.getExtras().getString("name");
+            int code = data.getExtras().getInt("code", 0);
+            // Toast the name to display temporarily on screen
+            Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+        }
+    }
+*/
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK) {
+            Tweet tweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("tweet"));
+            //Log.d("SendTweet", "Activity result: " + tweet.body);
+            // Extract name value from result extras
+            tweets.add(0, tweet);
+            tweetAdapter.notifyItemInserted(0);
+            rvTweets.scrollToPosition(0);
+        }
+    }
+
+
+    // ActivityOne.java
+    /*public void launchComposeView() {
+        // first parameter is the context, second is the class of the activity to launch
+        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+        startActivity(i); // brings up the second activity
+    }
+    */
+
+    // ActivityOne.java
+    public void composeMessage() {
+        // first parameter is the context, second is the class of the activity to launch
+        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+        startActivityForResult(i, REQUEST_CODE);
+
+        // put "extras" into the bundle for access in the second activity
+        /*i.putExtra("username", "foobar");
+        i.putExtra("in_reply_to", "george");
+        i.putExtra("code", 400);
+
+        */
+    }
+
+    private void populateTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("TwitterClient", response.toString());
-            }
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 //Log.d("TwitterClient", response.toString());
@@ -210,6 +205,11 @@ public class TimelineActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("TwitterClient", response.toString());
+            }
+
+            @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TwitterClient", responseString);
                 throwable.printStackTrace();
@@ -228,7 +228,7 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
 
-    } */
+    }
 
 
 }
