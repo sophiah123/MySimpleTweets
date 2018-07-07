@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+        android:state_enabled="true"
+        android:drawable="@drawable/ic_profile" /> <!-- pressed -->
+
+    <item
+        android:state_enabled="true"
+        android:drawable="@drawable/ic_vector_retweet_stroke" /> <!-- default -->
+</selector>

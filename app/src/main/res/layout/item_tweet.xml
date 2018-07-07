@@ -61,17 +61,23 @@
         android:text="TextView" />
 
 
+    <!-- android:background="@android:color/transparent"
+            android:drawable="@drawable/ic_vector_retweet_stroke"
+for the bottom one-->
+
     <ImageButton
         android:id="@+id/buttonRetweet"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_below="@id/tvBody"
-        android:background="@android:color/transparent"
         android:padding="0dp"
         android:layout_alignLeft="@id/tvBody"
         android:scaleType="fitCenter"
         android:tint="@color/medium_gray"
-        app:srcCompat="@drawable/ic_vector_retweet_stroke" />
+
+        android:background="@drawable/imageselector"
+        />
+
 
     <ImageButton
         android:id="@+id/buttonFavorite"
